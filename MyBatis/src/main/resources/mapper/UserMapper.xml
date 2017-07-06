@@ -10,12 +10,39 @@
 		parameterType：参数类型（可选）
 		resultType：返回值类型（可选	）
 	 -->
-	<select id="findById" parameterType="int" resultType="User">
-		select * from t_user where id = #{id}
+	 <!-- <cache readOnly="true" size="1024" eviction="FIFO" flushInterval="60000"/> -->
+	 <sql id="allColums">
+	 	id,user_name,address,password,dept_id
+	 </sql>
+	 
+<!-- 	<select id="findById" parameterType="int" resultType="User" useCache="false">
+		select <include refid="allColums"></include> from t_user where id = #{id}
 	</select>
 	<select id="findAll" resultType="User">
-		select * from t_user
+		select <include refid="allColums"></include> from t_user
 	</select>
+	<select id="findByUserNameAndPassword" resultType="User">
+		select <include refid="allColums"></include> from t_user where user_name = #{userName} and password = #{pwd}
+	</select>
+	<select id="findByMapParams" resultType="User">
+		select <include refid="allColums"></include> from t_user where user_name = #{userName} and password = #{pwd}
+	</select> -->
+	<select id="searchByNameAndAddress" parameterType="map" resultType="User">
+		select 
+			<include refid="allColums"></include>
+		from t_user 
+		<trim prefix="where" prefixOverrides="and|or"> 
+		<if test="name != null and name != ''">
+			user_name = #{name}
+		</if>
+		<if test="address != null and address != ''">
+			and address = #{address}
+		</if>
+		</trim>
+	</select>
+	
+	
+	
 	<!-- ONGL 进行映射 -->
 	<select id="findAllLoadDept" resultType="User">
 		SELECT
@@ -63,15 +90,29 @@
 	
 	
 	
-	<insert id="save" parameterType="User">
+	<!-- <insert id="save" parameterType="User" useGeneratedKeys="true" keyProperty="id">
 		insert into t_user (user_name,address,password)values(#{userName},#{address},#{password})
+	</insert> -->
+	<insert id="batchsave" parameterType="list">
+		insert into t_user (user_name,address,password)values
+		<foreach collection="list" item="user" separator=",">
+			(#{user.userName},#{user.address},#{user.password})
+		</foreach>
 	</insert>
-	<update id="update" parameterType="User">
-		update t_user set user_name = #{userName},address = #{address},password = #{password} where id = #{id}
-	</update>
 	
-	<delete id="delById" parameterType="int">
+	<!-- <update id="update" parameterType="User" flushCache="false">
+		update t_user set user_name = #{userName},address = #{address},password = #{password} where id = #{id}
+	</update> -->
+	
+	<!-- <delete id="delById" parameterType="int">
 		delete from t_user where id = #{id}
+	</delete> -->
+	
+	<delete id="delByIds" parameterType="list">
+		delete from t_user where id in 
+		<foreach collection="list" item="ids" separator="," open="(" close=")">
+			#{ids}
+		</foreach>
 	</delete>
 	
 	

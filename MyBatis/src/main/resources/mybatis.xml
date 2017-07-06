@@ -12,6 +12,11 @@
 		<typeAlias type="com.kaishengit.entity.User" alias="User"/>
 		<typeAlias type="com.kaishengit.entity.Dept" alias="Dept"/>
 	</typeAliases>
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+	</plugins>
+	
+	
 
 	<environments default="dev">
 		<environment id="dev">
@@ -29,7 +34,9 @@
 	<!-- 加载Mapper配置文件 -->
 	<mappers>
 		<mapper resource="mapper/UserMapper.xml"/>
+		<!-- <mapper class="com.kaishengit.mapper.UserMpper" /> -->
 		<mapper resource="mapper/DeptMapper.xml"/>
+		<mapper resource="mapper/MovieMapper.xml"/>
 	</mappers>
 	
 	
