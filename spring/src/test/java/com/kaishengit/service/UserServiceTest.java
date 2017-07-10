@@ -17,10 +17,8 @@ public class UserServiceTest {
        /* DiDemo diDemo = (DiDemo) applicationContext.getBean("diDemo");
         diDemo.show();*/
 
-
-
-       /* UserService userService = (UserService) applicationContext.getBean("userService");
-        userService.save();*/
+        UserService userService = (UserService) applicationContext.getBean("userService");
+        userService.save();
 
     }
 

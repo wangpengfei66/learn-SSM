@@ -11,14 +11,19 @@ public class UserService {
     private UserDao userDao;
     private WeiXinDao weiXinDao;
 
-    public UserService(UserDao userDao,WeiXinDao weiXinDao) {
+   /* public UserService(UserDao userDao,WeiXinDao weiXinDao) {
         this.userDao = userDao;
         this.weiXinDao = weiXinDao;
-    }
+    }*/
     public void save(){
         userDao.save();
+       /* if(true){
+            throw new RuntimeException("执行sql异常");
+        }*/
     }
-
+    public int sum() {
+        return 100;
+    }
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
