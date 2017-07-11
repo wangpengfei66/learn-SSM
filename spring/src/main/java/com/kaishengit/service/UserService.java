@@ -2,33 +2,26 @@ package com.kaishengit.service;
 
 import com.kaishengit.dao.UserDao;
 import com.kaishengit.dao.WeiXinDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.inject.Inject;
 
 /**
  * Created by Administrator on 2017/7/8.
  */
+@Service
 public class UserService {
-
+    //@Inject
     private UserDao userDao;
-    private WeiXinDao weiXinDao;
-
-   /* public UserService(UserDao userDao,WeiXinDao weiXinDao) {
+    @Autowired
+    public UserService(UserDao userDao) {
         this.userDao = userDao;
-        this.weiXinDao = weiXinDao;
-    }*/
+    }
+
     public void save(){
         userDao.save();
-       /* if(true){
-            throw new RuntimeException("执行sql异常");
-        }*/
-    }
-    public int sum() {
-        return 100;
-    }
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
     }
 
-    public void setWeiXinDao(WeiXinDao weiXinDao) {
-        this.weiXinDao = weiXinDao;
-    }
+
 }
