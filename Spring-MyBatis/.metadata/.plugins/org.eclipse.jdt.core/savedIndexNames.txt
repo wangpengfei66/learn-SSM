@@ -1,0 +1,2 @@
+INDEX VERSION 1.130+G:\git\workspace\Spring-MyBatis\.metadata\.plugins\org.eclipse.jdt.core
+267332923.index

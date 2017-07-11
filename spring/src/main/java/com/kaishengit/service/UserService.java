@@ -2,8 +2,10 @@ package com.kaishengit.service;
 
 import com.kaishengit.dao.UserDao;
 import com.kaishengit.dao.WeiXinDao;
+import com.kaishengit.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 
@@ -12,16 +14,14 @@ import javax.inject.Inject;
  */
 @Service
 public class UserService {
-    //@Inject
-    private UserDao userDao;
-    @Autowired
-    public UserService(UserDao userDao) {
-        this.userDao = userDao;
-    }
+   @Autowired
+   private UserDao userDao;
+   public User findById(int id) {
+       return userDao.findById(id);
+   }
 
-    public void save(){
-        userDao.save();
-    }
-
+   public void save(User user){
+       userDao.save(user);
+   }
 
 }
