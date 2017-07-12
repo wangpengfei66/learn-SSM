@@ -1,0 +1,38 @@
+package com.kaishengit.mybatis;
+
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.kaishengit.entity.User;
+import com.kaishengit.mapper.UserMapper;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="classpath:applicationContext.xml")
+public class MyBatisTest {
+	
+	UserMapper userMapper;
+	
+	@Autowired
+	SqlSessionFactory sqlSessionFactory;
+	@Test
+	public void findById() {
+		
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+		
+		User user = userMapper.findById(1);
+		System.out.println(user);
+	}
+	
+	public void save() {
+		
+		User user = new User("宋忠诚", "huiguozhen", "789123");
+		
+	}
+
+}

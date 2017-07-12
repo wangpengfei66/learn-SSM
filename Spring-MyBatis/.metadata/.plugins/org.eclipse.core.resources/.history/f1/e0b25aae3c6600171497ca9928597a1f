@@ -1,0 +1,11 @@
+package com.kaishengit.mybatis;
+
+import org.junit.runner.RunWith;
+
+@RunWith(Spring)
+public class MyBatisTest {
+	
+	
+	
+
+}

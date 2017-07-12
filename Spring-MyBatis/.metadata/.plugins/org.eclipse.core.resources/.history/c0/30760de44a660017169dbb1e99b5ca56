@@ -1,0 +1,8 @@
+package com.kaishengit.service;
+
+public class UserService {
+
+	public void save() {}
+	
+	
+}

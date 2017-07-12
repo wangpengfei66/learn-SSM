@@ -1,0 +1,16 @@
+package com.kaishengit.service;
+
+import org.springframework.stereotype.Service;
+
+import com.kaishengit.entity.User;
+
+@Service
+public class UserService {
+
+	UserMapper userMapper;
+	public void save(User user) {
+		
+	}
+	
+	
+}

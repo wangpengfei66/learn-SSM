@@ -1,0 +1,18 @@
+package com.kaishengit.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.kaishengit.entity.User;
+import com.kaishengit.mapper.UserMapper;
+
+@Service
+public class UserService {
+	@Autowired
+	UserMapperpper userMapper;
+	public void save(User user) {
+		
+	}
+	
+	
+}
