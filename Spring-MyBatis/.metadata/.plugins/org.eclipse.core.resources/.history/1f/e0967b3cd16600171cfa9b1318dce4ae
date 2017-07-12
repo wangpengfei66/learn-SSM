@@ -1,0 +1,32 @@
+package com.kaishengit;
+
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+@Configuration
+@ComponentScan
+@EnableTransactionManagement
+@PropertySource("classpath:config.properties")
+public class Application {
+
+	@Autowired
+	Environment environment;
+	
+	//配置数据库连接池
+	public DataSource dataSource() {
+		BasicDataSource basicDataSource = new BasicDataSource();
+		basicDataSource.setDriverClassName(environment.getProperty("jdbc.driver"));
+		basicDataSource.setUrl(environment.getProperty("jdbc.url"));
+		basicDataSource.setUsername(environment.getProperty("jdbc.usernam"));
+		basicDataSource.setPassword(environment.getProperty("jdbc.password"));
+		
+	}
+	
+}

@@ -9,10 +9,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.github.pagehelper.PageInfo;
+import com.kaishengit.Application;
 import com.kaishengit.entity.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations="classpath:applicationContext.xml")
+@ContextConfiguration(classes=Application.class)
 public class UserServiceTest {
 	@Autowired
 	private UserService userService;
