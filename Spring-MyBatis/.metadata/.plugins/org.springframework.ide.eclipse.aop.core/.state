@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aop-reference-model>
+<aop-project name="SpringMyBatis">
+<aspect-definition advice-class-name="org.springframework.transaction.interceptor.TransactionInterceptor" advice-method-name="invoke" advice-method-parameter-types="org.aopalliance.intercept.MethodInvocation" advice-type="AROUND" aspect-end-line-number="29" aspect-name="org.springframework.transaction.interceptor.TransactionInterceptor#SpringMyBatis#src/main/resources/applicationContext.xml#29" aspect-start-line-number="29" factory-id="org.springframework.ide.eclipse.aop.core.javaAdvisorDefinitionElementFactory" file="/SpringMyBatis/src/main/resources/applicationContext.xml" pointcut-expression="(@within(org.springframework.transaction.annotation.Transactional) || @annotation(org.springframework.transaction.annotation.Transactional)) &amp;&amp; execution(* *..*(..))" proxy-target-class="false">
+<aop-reference advice-type="AROUND" bean="1:BeansModel|2:SpringMyBatis|3:src/main/resources/applicationContext.xml|7:beans:7|8:userService:7" bean-file="/SpringMyBatis/src/main/resources/applicationContext.xml" bean-start-line="7" factory-id="org.springframework.ide.eclipse.aop.core.aopReferenceElementFactory" file="/SpringMyBatis/src/main/resources/applicationContext.xml" source="=SpringMyBatis/D:\/maven\/repo\/org\/springframework\/spring-tx\/4.3.9.RELEASE\/spring-tx-4.3.9.RELEASE.jar&lt;org.springframework.transaction.interceptor(TransactionInterceptor.class[TransactionInterceptor~invoke~Lorg.aopalliance.intercept.MethodInvocation;" source-start-line="-1" target="=SpringMyBatis/src\/main\/java&lt;com.kaishengit.service{UserService.java[UserService~save~QUser;" target-start-line="19"/>
+</aspect-definition>
+</aop-project>
+</aop-reference-model>
