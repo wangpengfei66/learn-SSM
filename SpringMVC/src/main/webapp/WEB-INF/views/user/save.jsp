@@ -19,5 +19,11 @@
         <input type="text" name="zipCode">
         <button>保存</button>
     </form>
+
+    <form action="/user/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="doc">
+        <button>上传</button>
+    </form>
+
 </body>
 </html>

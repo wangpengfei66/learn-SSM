@@ -10,5 +10,6 @@
 <body>
     <h1>user show</h1>
     ${name}
+    <img src="/img/avatar.png" alt="">
 </body>
 </html>

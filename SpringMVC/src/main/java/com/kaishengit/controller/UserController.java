@@ -1,12 +1,14 @@
 package com.kaishengit.controller;
 
 import com.kaishengit.controller.com.kaishengit.entity.User;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -47,7 +49,7 @@ public class UserController {
     @PostMapping("/save")
     public String userSave(User user, String zipCode, RedirectAttributes redirectAttributes) {
         System.out.println("userName" + user.getAddress() + "zipCode" + zipCode);
-        redirectAttributes.addAttribute("message","操作成功");
+        redirectAttributes.addFlashAttribute("message","操作成功");
         return "redirect:/user/save";
     }
 
@@ -82,6 +84,31 @@ public class UserController {
         user.setUserName("hja");
         user.setAddress("河南");
         return Arrays.asList(user,user1);
+    }
+    @PostMapping("/upload")
+    public String upload(MultipartFile doc,String docName) {
+        System.out.println("docName" + docName);
+        if (!doc.isEmpty()){
+            System.out.println(doc.getName());
+            System.out.println(doc.getOriginalFilename());
+            System.out.println(doc.getContentType());
+            System.out.println(doc.getSize());
+            try {
+                InputStream inputStream = doc.getInputStream();
+                OutputStream outputStream = new FileOutputStream(new File("G:/upload",doc.getOriginalFilename()));
+                IOUtils.copy(inputStream,outputStream);
+                outputStream.flush();
+                outputStream.close();
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return "redirect:/user/save";
+    }
+    @GetMapping("/list")
+    public String list() {
+        return "user/show";
     }
 
 }
