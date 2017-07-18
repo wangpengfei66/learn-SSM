@@ -31,7 +31,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">员工管理</h3>
                             <div class="box-tools pull-right">
-                                <button type="button" class="btn btn-box-tool"  title="Collapse">
+                                <button type="button" class="btn btn-box-tool" title="Collapse" id="addAccountBtn">
                                     <i class="fa fa-plus"></i> 添加员工</button>
                             </div>
                         </div>
@@ -56,9 +56,42 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+    <div class="modal fade" id="addAccountModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">添加员工</h4>
+          </div>
+          <div class="modal-body">
+              <form action="" id="addAccountForm">
+                  <div class="form-group">
+                      <label>姓名</label>
+                      <input type="text" name="userName" class="form-control">
+                  </div>
+                  <div class="form-group">
+                      <label>密码(默认密码123123)</label>
+                      <input type="password" name="password" class="form-control" value="123123">
+                  </div>
+                  <div class="form-group">
+                      <label>手机号码</label>
+                      <input type="text" name="mobile" class="form-control">
+                  </div>
+                  <div class="form-group">
+                      <label>部门</label>
+                      <div id="deptArea"></div>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" id="saveAccountBtn">保存</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <%@ include file="../base/base-footer.jsp"%>
-
 
 </div>
 <!-- ./wrapper -->
@@ -66,44 +99,122 @@
 <%@include file="../base/base-js.jsp"%>
 <script src="/static/plugins/tree/js/jquery.ztree.all.min.js"></script>
 <script src="/static/plugins/layer/layer.js"></script>
+<script src="/static/plugins/validate/jquery.validate.js"></script>
 <script>
     $(function(){
         var setting = {
-            data: {
-                simpleData: {
-                    enable: true
-                }
-            },
+              data: {
+                  simpleData:{
+                      enable:true
+                  }
+              },
             async:{
-                enable:true,
+                enable : true,
                 url:"/manage/account/depts.json"
             },
             callback:{
-                onClick:function(event,treeId,treeNode,clickFlag){
-                    alert(treeNode.id + treeNode.name + treeNode.pId);
+                onClick:function (envent,treeId,treeNode,clickFlag) {
+                    alert(treeNode.id+treeNode.name + treeNode.pid);
                 }
             }
         };
-
-        var tree = $.fn.zTree.init($("#ztree"), setting);
-
-
-        //添加部门
+        var tree = $.fn.zTree.init($("#ztree"),setting);
         $("#addDeptBtn").click(function () {
-            layer.prompt({"title":"请输入部门名称"},function(text,index){
+            layer.prompt({"title":"请输入部门名称"},function (text,index) {
                 layer.close(index);//关闭对话框
-                $.post("/manage/account/dept/new",{"deptName":text,"pId":1000}).done(function(data){
+                //deptName为text中内容，1000为父id
+                $.post("/manage/account/dept/new",{"deptName":text,pId:1}).done(function (data) {
                     if(data.state == "success") {
-                        layer.msg("添加成功");
-                        tree.reAsyncChildNodes(null, "refresh");
-                    } else {
+                        layer.msg("添加成功")
+                        tree.reAsyncChildNodes(null,"refresh");
+                    }else{
                         layer.msg(data.message);
                     }
-                }).error(function(){
+                }).error(function () {
                     layer.msg("服务器异常");
                 });
             });
         });
+
+        $("#addAccountBtn").click(function() {
+            //ajax加载部门列表
+            $("#deptArea").html("");
+            $.post("/manage/account/depts.json").done(function(data) {
+                if(!data.length || data.length == 1) {
+                    layer.msg("请先创建部门");
+                    return ;
+                }
+                for(var i = 0; i < data.length; i++) {
+                    var obj = data[i];
+                    if(obj.id != 1) {
+                        var html = '<label class="checkbox-inline"><input type="checkbox" name="deptId" value="' + obj.id + '"> '+ obj.name +' </label>';
+                        $(html).appendTo($("#deptArea"));
+                    }
+                }
+                $("#addAccountModal").modal({
+                    show:true,
+                    backdrop:'static'
+                });
+            }).error(function() {
+                layer.msg("服务器异常");
+            });
+        });
+
+        //提交表单
+        $("#saveAccountBtn").click(function () {
+            $("#addAccountForm").submit();
+        });
+
+        //表单验证
+        $("#addAccountForm").validate({
+            errorClass:"text-danger",
+            errorElement:"span",
+            rules:{
+                userName:{
+                    required:true
+                },
+                password:{
+                    required:true
+                },
+                mobile:{
+                    required:true
+                },
+                deptId:{
+                    required:true
+                }
+            },
+            messages:{
+                userName:{
+                    required:"请输入账号"
+                },
+                password:{
+                    required:"请输入密码"
+                },
+                mobile:{
+                    required:"请输入手机号码"
+                },
+                deptId:{
+                    required:"至少选择一个部门"
+                }
+            },
+            submitHandler:function () {
+                //异步提交
+                $.post("/manage/account/new",$("#addAccountForm").serialize()).done(function(data) {
+                    if(data.state == "success") {
+                        $("#addAccountForm")[0].reset();
+                        $("#addAccountModal").modal('hide');
+                        layer.msg("添加成功");
+                    }else{
+                        layer.alert(data.message);
+                    }
+                }).error(function() {
+                    layer.msg("服务器异常");
+                });
+            }
+        });
+
+
+
     });
 </script>
 </body>
