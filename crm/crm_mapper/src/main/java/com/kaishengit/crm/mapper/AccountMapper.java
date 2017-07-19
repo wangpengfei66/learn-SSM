@@ -31,4 +31,6 @@ public interface AccountMapper {
     List<Account> findByDeptId(@Param("deptId") Integer deptId);
 
     Long countByDeptId(@Param("deptId") Integer deptId);
+
+    Account findByMobileLoadDept(String mobile);
 }

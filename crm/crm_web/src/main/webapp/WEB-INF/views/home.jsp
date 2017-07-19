@@ -3,16 +3,25 @@
 <html>
 <head>
     <title>凯盛软件CRM-首页</title>
-    <%@ include file="base/base-css.jsp"%>
-    <link rel="stylesheet" href="/static/plugins/tree/css/metroStyle/metroStyle.css">
+    <%@include file="base/base-css.jsp"%>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
-    <%@include file="base/base-side.jsp"%>
+    <jsp:include page="base/base-side.jsp">
+        <jsp:param name="active" value="home"/>
+    </jsp:include>
+    <!-- 右侧内容部分 -->
+    <div class="content-wrapper">
 
-    <%--要填的内容--%>
+        <!-- Main content -->
+        <section class="content">
 
+           <h3>首页</h3>
+
+        </section>
+        <!-- /.content -->
+    </div>
     <!-- /.content-wrapper -->
 
     <%@ include file="base/base-footer.jsp"%>
@@ -21,7 +30,6 @@
 <!-- ./wrapper -->
 
 <%@include file="base/base-js.jsp"%>
-
 
 </body>
 </html>

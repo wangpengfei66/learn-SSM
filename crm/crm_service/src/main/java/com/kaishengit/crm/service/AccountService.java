@@ -20,4 +20,6 @@ public interface AccountService {
     Long countByDeptId(Integer deptId);
 
     void delById(Integer id);
+
+    Account findByMobileLoadDept(String mobile, String password);
 }

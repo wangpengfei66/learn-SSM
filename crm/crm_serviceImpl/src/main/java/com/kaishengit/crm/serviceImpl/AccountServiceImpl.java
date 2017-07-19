@@ -1,15 +1,16 @@
 package com.kaishengit.crm.serviceImpl;
 
-import com.github.pagehelper.PageHelper;
 import com.kaishengit.crm.entity.Account;
 import com.kaishengit.crm.entity.AccountDeptExample;
 import com.kaishengit.crm.entity.AccountDeptKey;
 import com.kaishengit.crm.entity.AccountExample;
 import com.kaishengit.crm.mapper.AccountDeptMapper;
 import com.kaishengit.crm.mapper.AccountMapper;
-import com.kaishengit.crm.mapper.DeptMapper;
 import com.kaishengit.crm.service.AccountService;
+import com.kaishengit.exception.LoginException;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +26,13 @@ public class AccountServiceImpl implements AccountService {
     private AccountMapper accountMapper;
     @Autowired
     private AccountDeptMapper accountDeptMapper;
-
+    @Value("password.salt")
+     private String passwordSalt;
     @Override
     @Transactional
     public void saveAccount(Account account, Integer[] depts) {
         //保存新账户
+        account.setPassword(org.apache.commons.codec.digest.DigestUtils.md5Hex(passwordSalt + account.getPassword()));
         accountMapper.insert(account);
         //保存新关系账户
         for(Integer dept : depts) {
@@ -93,5 +96,14 @@ public class AccountServiceImpl implements AccountService {
         AccountExample accountExample = new AccountExample();
         accountExample.createCriteria().andIdEqualTo(id);
         accountMapper.deleteByExample(accountExample);
+    }
+
+    @Override
+    public Account findByMobileLoadDept(String mobile, String password) {
+        Account account = accountMapper.findByMobileLoadDept(mobile);
+        if(DigestUtils.md5Hex(passwordSalt + password).equals(account.getPassword())){
+            return account;
+        }
+        throw new LoginException("账号或密码错误");
     }
 }
