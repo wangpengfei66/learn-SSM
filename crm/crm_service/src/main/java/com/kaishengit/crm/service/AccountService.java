@@ -11,4 +11,13 @@ public interface AccountService {
     void saveAccount(Account account, Integer[] depts);
 
     List<Account> findAllAccounts();
+
+    Long countAll();
+
+
+    List<Account> findByDeptId(Integer deptId);
+
+    Long countByDeptId(Integer deptId);
+
+    void delById(Integer id);
 }

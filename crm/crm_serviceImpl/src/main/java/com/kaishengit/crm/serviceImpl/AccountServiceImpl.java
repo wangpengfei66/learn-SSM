@@ -1,5 +1,6 @@
 package com.kaishengit.crm.serviceImpl;
 
+import com.github.pagehelper.PageHelper;
 import com.kaishengit.crm.entity.Account;
 import com.kaishengit.crm.entity.AccountDeptExample;
 import com.kaishengit.crm.entity.AccountDeptKey;
@@ -43,5 +44,54 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> findAllAccounts() {
         return accountMapper.selectByExample(new AccountExample());
+    }
+
+    @Override
+    public Long countAll() {
+        return accountMapper.countByExample(new AccountExample());
+    }
+
+
+
+
+  /*  @Override
+    public List<Account> getPage(String start, String length) {
+        //PageHelper.offsetPage(Integer.valueOf(start),Integer.valueOf(length));
+        List<Account> accountList = accountMapper.findAllLoadDept();
+        return accountList;
+    }*/
+
+    /**
+     * 如果ID是1，代表总公司，不查询
+     * @param id
+     * @return
+     */
+    @Override
+    public List<Account> findByDeptId(Integer deptId) {
+        if(new Integer(1).equals(deptId)){
+            deptId = null;
+        }
+        return accountMapper.findByDeptId(deptId);
+    }
+
+    @Override
+    public Long countByDeptId(Integer deptId) {
+        if(new Integer(1).equals(deptId)){
+            deptId = null;
+        }
+        return accountMapper.countByDeptId(deptId);
+    }
+
+    @Override
+    @Transactional
+    public void delById(Integer id) {
+        //删除关系
+        AccountDeptExample accountDeptExample = new AccountDeptExample();
+        accountDeptExample.createCriteria().andAccountIdEqualTo(id);
+        accountDeptMapper.deleteByExample(accountDeptExample);
+        //删除员工
+        AccountExample accountExample = new AccountExample();
+        accountExample.createCriteria().andIdEqualTo(id);
+        accountMapper.deleteByExample(accountExample);
     }
 }

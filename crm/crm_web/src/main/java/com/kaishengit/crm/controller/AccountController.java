@@ -8,17 +8,18 @@ import com.kaishengit.crm.entity.Dept;
 import com.kaishengit.crm.service.AccountService;
 import com.kaishengit.crm.service.DeptService;
 import com.kaishengit.dto.AjaxResult;
+import com.kaishengit.dto.DataTableResult;
 import com.kaishengit.dto.ZTreeNode;
+import com.mysql.jdbc.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.IntToDoubleFunction;
 
 /**
  * Created by Administrator on 2017/7/17.
@@ -32,15 +33,41 @@ public class AccountController {
     private DeptService deptService;
 
     @GetMapping
-    public String  accountList(){
+    public String accountList(){
         return "manage/accounts";
     }
+
+    /**
+     * Datatables加载数据
+     * @return
+     */
+    @GetMapping("/load.json")
+    @ResponseBody
+    public DataTableResult<Account> loadAccountData(HttpServletRequest request) {
+        String draw = request.getParameter("draw");
+        //String start = request.getParameter("start");
+        //String length = request.getParameter("length");
+        Integer id = null;
+        String deptId = request.getParameter("deptId");
+        if(org.apache.commons.lang3.StringUtils.isNotEmpty(deptId)) {
+            id = Integer.valueOf(deptId);
+        }
+        //获取Account的总记录数
+        Long total = accountService.countAll();
+        //获取Account过滤后的数量
+        Long filterTotal = accountService.countByDeptId(id);
+        //获取当前页的记录
+        List<Account> accountList = accountService.findByDeptId(id);
+        DataTableResult<Account> dataTableResult = new DataTableResult<>(draw,total,filterTotal,accountList);
+        return dataTableResult;
+    }
+
 
     @PostMapping("/depts.json")
     @ResponseBody
     public List<ZTreeNode> loadDeptData() {
         List<Dept> deptList = deptService.findAllDept();
-        //高级做法
+        //高级做法  dept转换为ztreeNode
         List<ZTreeNode> nodeList = Lists.newArrayList(Collections2.transform(deptList, new Function<Dept, ZTreeNode>() {
 
             @Nullable
@@ -77,5 +104,14 @@ public class AccountController {
         accountService.saveAccount(account,deptId);
         return AjaxResult.success();
     }
+
+    @PostMapping("/del/{id:\\d+}")
+    @ResponseBody
+    public AjaxResult delById(@PathVariable Integer id) {
+        accountService.delById(id);
+        return AjaxResult.success();
+    }
+
+
 
 }
