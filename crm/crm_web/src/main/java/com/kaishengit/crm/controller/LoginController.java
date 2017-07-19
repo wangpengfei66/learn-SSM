@@ -6,6 +6,7 @@ import com.kaishengit.crm.mapper.AccountMapper;
 import com.kaishengit.crm.service.AccountService;
 import com.kaishengit.dto.AjaxResult;
 import com.kaishengit.exception.LoginException;
+import com.kaishengit.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +56,33 @@ public class LoginController {
         session.invalidate();
         redirectAttributes.addFlashAttribute("message","您已安全退出系统");
         return "redirect:/";
+    }
+    /**
+     * 用户个人设置
+     */
+    @GetMapping("profile")
+    public String personalSet() {
+        return "profile";
+    }
+
+    /**
+     * 修改个人设置
+     * @param oldPassword 旧密码
+     * @param password  新密码
+     * @param session 从Session中获取对象
+     * @return
+     */
+    @PostMapping("/profile")
+    @ResponseBody
+    public AjaxResult personalSet(String oldPassword,String password,HttpSession session) {
+        //从session中获取对象
+        Account account = (Account) session.getAttribute("currentUser");
+        try {
+            accountService.update(oldPassword, password, account);
+            return AjaxResult.success();
+        }catch (ServiceException e){
+            return AjaxResult.error(e.getMessage());
+        }
     }
 
 }

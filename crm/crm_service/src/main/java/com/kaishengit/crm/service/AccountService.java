@@ -1,7 +1,9 @@
 package com.kaishengit.crm.service;
 
 import com.kaishengit.crm.entity.Account;
+import com.kaishengit.exception.ServiceException;
 
+import javax.sql.rowset.serial.SerialException;
 import java.util.List;
 
 /**
@@ -22,4 +24,7 @@ public interface AccountService {
     void delById(Integer id);
 
     Account findByMobileLoadDept(String mobile, String password);
+
+    void update(String oldPassword, String password,Account account) throws ServiceException;
+
 }

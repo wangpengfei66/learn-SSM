@@ -8,6 +8,7 @@ import com.kaishengit.crm.mapper.AccountDeptMapper;
 import com.kaishengit.crm.mapper.AccountMapper;
 import com.kaishengit.crm.service.AccountService;
 import com.kaishengit.exception.LoginException;
+import com.kaishengit.exception.ServiceException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -105,5 +106,15 @@ public class AccountServiceImpl implements AccountService {
             return account;
         }
         throw new LoginException("账号或密码错误");
+    }
+
+    @Override
+    public void update(String oldPassword, String password,Account account) throws ServiceException {
+        if(DigestUtils.md5Hex(passwordSalt + oldPassword).equals(account.getPassword())) {
+            account.setPassword(DigestUtils.md5Hex(passwordSalt + password));
+            accountMapper.updateByPrimaryKeySelective(account);
+        }else{
+            throw new ServiceException("原始密码错误");
+        }
     }
 }
