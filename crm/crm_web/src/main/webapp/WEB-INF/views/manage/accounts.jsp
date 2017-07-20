@@ -25,9 +25,10 @@
                 <div class="col-md-2">
                     <div class="box">
                         <div class="box-body">
+                            <%--//一个隐藏的input框--%>
                             <input type="hidden" id="deptId" value="">
                             <button class="btn btn-default" id="addDeptBtn">添加部门</button>
-                            <ul id="ztree" class="ztree"></ul>
+                            <ul id="ztree" class="ztree"></i></ul>
                         </div>
                     </div>
                 </div>
@@ -36,6 +37,7 @@
                     <div class="box">
                         <div class="box-header with-border">
                             <h3 class="box-title">员工管理</h3>
+                                <a href="javascript:;" class="btn btn-danger" id="delDept"><i class="fa fa-trash"></i>删除部门</a>
                             <div class="box-tools pull-right">
                                 <button type="button" class="btn btn-box-tool" title="Collapse" id="addAccountBtn">
                                     <i class="fa fa-plus"></i> 添加员工</button>
@@ -172,13 +174,31 @@
                 url:"/manage/account/depts.json"
             },
             callback:{
+
                 onClick:function (envent,treeId,treeNode,clickFlag) {
                     //alert(treeNode.id+treeNode.name + treeNode.pId);
                     $("#deptId").val(treeNode.id);
+                    $("#delDept").click(function () {
+                        layer.confirm("确定要删除部门？",function (index) {
+                            layer.close(index);
+                            $.post("/manage/account/delDept/"+treeNode.id).done(function(data) {
+                                if(data.state == 'success') {
+                                    layer.msg("删除成功");
+                                }else{
+                                    layer.msg(data.message);
+                                }
+                            }).error(function() {
+                                layer.msg("服务器异常");
+                            });
+                        });
+                    })
                     dataTable.ajax.reload();
                 }
             }
         };
+        /**
+         * 创建新部门
+         */
         var tree = $.fn.zTree.init($("#ztree"),setting);
         $("#addDeptBtn").click(function () {
             layer.prompt({"title":"请输入部门名称"},function (text,index) {
@@ -196,7 +216,9 @@
                 });
             });
         });
-
+        /**
+         * 添加员工
+         */
         $("#addAccountBtn").click(function() {
             //ajax加载部门列表
             $("#deptArea").html("");
@@ -208,7 +230,7 @@
                 for(var i = 0; i < data.length; i++) {
                     var obj = data[i];
                     if(obj.id != 1) {
-                        var html = '<label class="checkbox-inline"><input type="checkbox" name="deptId" value="' + obj.id + '"> '+ obj.name +' </label>';
+                        var html = '<label class="checkbox-inline"><input type="checkbox" name="deptId" value="' + obj.id + '"> '+ obj.name +'</label>';
                         $(html).appendTo($("#deptArea"));
                     }
                 }

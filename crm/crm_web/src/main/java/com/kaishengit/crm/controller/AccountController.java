@@ -111,6 +111,12 @@ public class AccountController {
         accountService.delById(id);
         return AjaxResult.success();
     }
+    @PostMapping("/delDept/{id:\\d+}")
+    @ResponseBody
+    public AjaxResult delDeptById(@PathVariable Integer id) {
+        deptService.delById(id);
+        return AjaxResult.success();
+    }
 
 
 

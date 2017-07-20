@@ -31,8 +31,10 @@ public class LoginInterceptor extends HandlerInterceptorAdapter{
             Account account = (Account) session.getAttribute("currentUser");
             if(account == null) {
                 response.sendRedirect("/");
+                return false;
+            }else{
+                return true;
             }
         }
-        return true;
     }
 }

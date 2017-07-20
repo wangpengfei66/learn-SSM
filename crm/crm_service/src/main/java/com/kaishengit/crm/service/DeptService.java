@@ -11,4 +11,6 @@ public interface DeptService {
     List<Dept> findAllDept();
 
     void save(Dept dept);
+
+    void delById(Integer id);
 }
