@@ -14,4 +14,10 @@ public interface CustomerService {
     void saveCust(Customer customer, Integer id);
 
     PageInfo<Customer> findPageByParams(Map<String, Object> queryParams);
+
+    Customer findById(Integer id);
+
+    void editCust(Customer customer);
+
+    void delById(Integer id);
 }

@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -60,7 +61,7 @@
                             <h3 class="box-title">我的客户</h3>
                             <div class="box-tools pull-right">
                                 <a href="/customer/new" class="btn btn-success btn-sm><i class="fa fa-plus"></i>新增客户</a>
-                                <button class="btn btn-primary btn-sm"><i class="fa fa-file-excel-o"></i> 导出Excel</button>
+                                <button class="btn btn-primary btn-sm"><i class="fa fa-file-excel-o"></i>导出Excel</button>
                             </div>
                         </div>
                         <div class="box-body no-padding">
@@ -75,11 +76,11 @@
                                     <th>联系方式</th>
                                 </tr>
                                 <c:forEach items="${pageInfo.list}" var="cust">
-                                    <tr>
+                                    <tr rel="${cust.id}" class="cust_row">
                                         <td><span class="name-avatar" style="background-color:${cust.sex == '先生' ? '#ccc' : 'pink'};">${fn:substring(cust.custName,0 ,1 )}</span></td>
                                         <td>${cust.custName}</td>
                                         <td>${cust.job}</td>
-                                        <td>${cust.contactTime}</td>
+                                        <td><fmt:formatDate value="${cust.contactTime}" type="date"></fmt:formatDate></td>
                                         <td class="star">${cust.level}</td>
                                         <td><i class="fa fa-phone"></i> ${cust.tel}<br></td>
                                     </tr>
@@ -117,7 +118,10 @@
             next:'下一页',
             href:"?p={{number}}"
         });
-
+        $(".cust_row").click(function () {
+           var id = $(this).attr("rel");
+           window.location.href = "/customer/my/" + id;
+        });
     });
 </script>
 </body>

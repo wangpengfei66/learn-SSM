@@ -68,5 +68,24 @@ public class CustomerServiceImpl implements CustomerService{
         return new PageInfo<Customer>(customerList);
     }
 
+    @Override
+    public Customer findById(Integer id) {
+        return customerMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void editCust(Customer customer) {
+        customerMapper.updateByPrimaryKeySelective(customer);
+    }
+
+    @Override
+    public void delById(Integer id) {
+        //TODO 删除跟进记录
+        //TODO 删除日程安排
+        //TODO 删除相关资料
+        //删除客户 物理删除，逻辑删除，是将状态改为不可用即可
+        customerMapper.deleteByPrimaryKey(id);
+    }
+
 
 }

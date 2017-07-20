@@ -10,7 +10,7 @@
 <!-- Site wrapper -->
 <div class="wrapper">
     <jsp:include page="../base/base-side.jsp">
-        <jsp:param name="active" value="customerAdd"/>
+        <jsp:param name="active" value="customerEdit"/>
     </jsp:include>
 
             <!-- 右侧内容部分 -->
@@ -21,46 +21,49 @@
                     <!-- Default box -->
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">新增客户</h3>
+                            <h3 class="box-title">编辑客户</h3>
                             <div class="box-tools pull-right">
-                                <a href="/customer/my" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> 返回列表</a>
+                                <a href="/customer/my/${customer.id}" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> 返回详细信息</a>
                             </div>
                         </div>
                         <div class="box-body">
-                            <form action="/customer/new" method="post" id="saveForm">
+                            <form method="post" id="saveForm">
+                                <input type="hidden" name="id" value="${customer.id}">
+                                <input type="hidden" name="accountId" value="${customer.accountId}">
                                 <div class="form-group">
                                     <label>姓名<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="custName" id="custName">
+                                    <input type="text" class="form-control" name="custName" id="custName" value="${customer.custName}">
                                 </div>
                                 <div class="form-group">
                                     <label>性别</label>
                                     <div>
                                         <label class="radio-inline">
-                                            <input type="radio" name="sex" value="先生" checked> 先生
+                                            <input type="radio" name="sex" value="先生" ${customer.sex == '先生' ? 'checked' : ''}> 先生
                                         </label>
+
                                         <label class="radio-inline">
-                                            <input type="radio" name="sex" value="女士">女士
+                                            <input type="radio" name="sex" value="女士" ${customer.sex == '女士' ? 'checked':''}>女士
                                         </label>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label>职位</label>
-                                    <input type="text" class="form-control" name="job">
+                                    <input type="text" class="form-control" name="job" value="${customer.job}">
                                 </div>
                                 <div class="form-group">
                                     <label>联系方式<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="tel" id="tel">
+                                    <input type="text" class="form-control" name="tel" id="tel" value="${customer.tel}">
                                 </div>
                                 <div class="form-group">
                                     <label>地址</label>
-                                    <input type="text" class="form-control" name="address">
+                                    <input type="text" class="form-control" name="address" value="${customer.address}">
                                 </div>
                                 <div class="form-group">
                                     <label>所属行业</label>
                                     <select class="form-control" name="trade">
                                         <option value=""></option>
                                         <c:forEach items="${tradeList}" var="trade">
-                                            <option value="${trade}">${trade}</option>
+                                            <option value="${trade}" ${customer.trade == trade ? 'selected':''}>${trade}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -69,7 +72,7 @@
                                     <select name="source" class="form-control">
                                         <option value=""></option>
                                         <c:forEach items="${sourceList}" var="source">
-                                            <option value="${source}">${source}</option>
+                                            <option value="${source}" ${customer.source == source ? 'selected':''}>${source}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -77,16 +80,16 @@
                                     <label>级别</label>
                                     <select class="form-control" name="level">
                                         <option value=""></option>
-                                        <option value="★">★</option>
-                                        <option value="★★">★★</option>
-                                        <option value="★★★">★★★</option>
-                                        <option value="★★★★">★★★★</option>
-                                        <option value="★★★★★">★★★★★</option>
+                                        <option ${customer.level == '★' ? 'selected' : ''} value="★">★</option>
+                                        <option ${customer.level == '★★' ? 'selected' : ''} value="★★">★★</option>
+                                        <option ${customer.level == '★★★' ? 'selected' : ''} value="★★★">★★★</option>
+                                        <option ${customer.level == '★★★★' ? 'selected' : ''} value="★★★★">★★★★</option>
+                                        <option ${customer.level == '★★★★★' ? 'selected' : ''} value="★★★★★">★★★★★</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>备注</label>
-                                    <input type="text" class="form-control" name="mark">
+                                    <input type="text" class="form-control" name="mark" value="${customer.mark}">
                                 </div>
                             </form>
                         </div>
@@ -133,20 +136,6 @@
                 tel:{
                     required:"请输入联系电话"
                 }
-            },
-            submitHandler:function () {
-                //异步提交
-                $.post("/customer/new",$("#saveForm").serialize()).done(function(data) {
-                    if(data.state == "success") {
-                        layer.alert("添加成功",function () {
-                            window.location.href = "/customer/my"
-                        });
-                    }else{
-                        layer.alert(data.message);
-                    }
-                }).error(function() {
-                    layer.msg("服务器异常");
-                });
             }
         });
     });

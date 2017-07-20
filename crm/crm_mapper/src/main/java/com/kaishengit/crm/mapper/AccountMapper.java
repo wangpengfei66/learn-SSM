@@ -33,4 +33,6 @@ public interface AccountMapper {
     Long countByDeptId(@Param("deptId") Integer deptId);
 
     Account findByMobileLoadDept(String mobile);
+
+    void deleteByDeptId(Integer id);
 }

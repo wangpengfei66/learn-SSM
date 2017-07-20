@@ -10,9 +10,11 @@ import com.kaishengit.crm.service.DeptService;
 import com.kaishengit.dto.AjaxResult;
 import com.kaishengit.dto.DataTableResult;
 import com.kaishengit.dto.ZTreeNode;
+import com.kaishengit.exception.ServiceException;
 import com.mysql.jdbc.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nullable;
@@ -111,11 +113,21 @@ public class AccountController {
         accountService.delById(id);
         return AjaxResult.success();
     }
+
+    /**
+     * 根据公司id删除公司
+     * @param id
+     * @return
+     */
     @PostMapping("/delDept/{id:\\d+}")
     @ResponseBody
     public AjaxResult delDeptById(@PathVariable Integer id) {
-        deptService.delById(id);
-        return AjaxResult.success();
+        try {
+            deptService.delById(id);
+            return AjaxResult.success();
+        }catch (ServiceException e){
+            return AjaxResult.error(e.getMessage());
+        }
     }
 
 
