@@ -35,7 +35,7 @@
 <!-- Site wrapper -->
 <div class="wrapper">
     <jsp:include page="../base/base-side.jsp">
-        <jsp:param name="active" value="customerMy"/>
+        <jsp:param name="active" value="customerPublic"/>
     </jsp:include>
             
             <!-- 右侧内容部分 -->

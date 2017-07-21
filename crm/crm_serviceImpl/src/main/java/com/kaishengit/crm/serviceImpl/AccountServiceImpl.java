@@ -102,6 +102,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account findByMobileLoadDept(String mobile, String password) {
         Account account = accountMapper.findByMobileLoadDept(mobile);
+        if(account == null) {
+            throw new LoginException("账号或密码错误");
+        }
         if(DigestUtils.md5Hex(passwordSalt + password).equals(account.getPassword())){
             return account;
         }

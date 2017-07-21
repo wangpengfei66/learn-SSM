@@ -33,8 +33,8 @@
                     <div class="box-tools">
                         <a href="/customer/my" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> 返回列表</a>
                         <a href="/customer/my/edit/${customer.id}" class="btn bg-purple btn-sm"><i class="fa fa-pencil"></i> 编辑</a>
-                        <button class="btn bg-orange btn-sm"><i class="fa fa-exchange"></i> 转交他人</button>
-                        <button class="btn bg-maroon btn-sm"><i class="fa fa-recycle"></i> 放入公海</button>
+                        <button class="btn bg-orange btn-sm" id="transferBtn"><i class="fa fa-exchange"></i> 转交他人</button>
+                        <button class="btn bg-maroon btn-sm" id="sharePublicBtn"><i class="fa fa-recycle"></i> 放入公海</button>
                         <button id="delBtn" rel="${customer.id}" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> 删除</button>
                     </div>
                 </div>
@@ -116,6 +116,28 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+    <div class="modal fade" id="accountModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">请选择转入员工</h4>
+          </div>
+          <div class="modal-body">
+             <select id="accountId" class="form-control">
+                <option value=""></option>
+                <c:forEach items="${accountList}" var="account">
+                    <option value="${account.id}">${account.userName}(${account.mobile})</option>
+                </c:forEach>
+             </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" id="transferBtnOk">转交</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <%@ include file="../base/base-footer.jsp"%>
 
@@ -126,11 +148,31 @@
 <script src="/static/plugins/layer/layer.js"></script>
 <script>
     $(function () {
+        var custId = ${customer.id};
         $("#delBtn").click(function () {
             var id = $(this).attr("rel");
             layer.confirm("删除客户会自动删除相关数据，确定吗?",function(){
                 window.location.href = "/customer/my/del/"+id+"";
             });
+        });
+        $("#sharePublicBtn").click(function () {
+            layer.confirm("确定将客户放入公海？",function () {
+                window.location.href = "/customer/my/sharePublic/"+custId+"";
+            })
+        });
+        $("#transferBtn").click(function () {
+            $("#accountModal").modal({
+                show:true,
+                backdrop:'static'
+            });
+        });
+        $("#transferBtnOk").click(function () {
+           var accountId = $("#accountId").val();
+           if(!accountId) {
+               layer.msg("请选择转入账号");
+               return ;
+           }
+           window.location.href = "/customer/my/"+custId+"/transfer/"+accountId+"";
         });
     })
 </script>

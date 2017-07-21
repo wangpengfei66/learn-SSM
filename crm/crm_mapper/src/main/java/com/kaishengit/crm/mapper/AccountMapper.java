@@ -35,4 +35,5 @@ public interface AccountMapper {
     Account findByMobileLoadDept(String mobile);
 
     void deleteByDeptId(Integer id);
+
 }
