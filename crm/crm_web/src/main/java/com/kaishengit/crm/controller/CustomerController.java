@@ -38,7 +38,7 @@ public class CustomerController {
     @GetMapping("/my")
     public String myCust(Model model,
                          @RequestParam(required = false,defaultValue = "1",value = "p") Integer pageNum,
-                         @RequestParam(required = false,defaultValue = "") String keyword,
+                         @RequestParam(required = false) String keyword,
                          HttpSession session) {
         Account account = (Account) session.getAttribute("currentUser");
         Map<String,Object> queryParams = Maps.newHashMap();
@@ -92,7 +92,7 @@ public class CustomerController {
         if(customer == null) {
             throw new NotFoundException();
         }
-        if(!customer.getAccountId().equals(account.getId())) {
+        if(!account.getId().equals(customer.getAccountId())) {
             throw new ForbiddenException();
         }
         model.addAttribute("accountList",accountService.findAllAccounts());
@@ -114,7 +114,7 @@ public class CustomerController {
         if(customer == null) {
             throw new NotFoundException();
         }
-        if(!customer.getAccountId().equals(account.getId())) {
+        if(!account.getId().equals(customer.getAccountId())) {
             throw new ForbiddenException();
         }
         model.addAttribute("customer",customer);
@@ -145,7 +145,7 @@ public class CustomerController {
         if(customer == null) {
             throw new NotFoundException();
         }
-        if(!customer.getAccountId().equals(account.getId())) {
+        if(!account.getId().equals(customer.getAccountId())) {
             throw new ForbiddenException();
         }
         customerService.delById(id);
@@ -162,7 +162,7 @@ public class CustomerController {
         if(customer == null) {
             throw new NotFoundException();
         }
-        if(!customer.getAccountId().equals(account.getId())) {
+        if(!account.getId().equals(customer.getAccountId())) {
             throw new ForbiddenException();
         }
         customerService.shareCustomerToPublic(customer,account);
@@ -182,7 +182,7 @@ public class CustomerController {
         if(customer == null) {
             throw new NotFoundException();
         }
-        if(!customer.getAccountId().equals(account.getId())) {
+        if(!account.getId().equals(customer.getAccountId())) {
             throw new ForbiddenException();
         }
         customerService.transferCustomerToOtherAccount(customer,accountId,account);

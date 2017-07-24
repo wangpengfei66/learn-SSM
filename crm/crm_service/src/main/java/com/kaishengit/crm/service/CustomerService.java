@@ -34,4 +34,6 @@ public interface CustomerService {
     List<Customer> findPublicCustomer();
 
     PageInfo<Customer> findPublicPageByParams(Map<String, Object> queryParams);
+
+    List<Customer> findAll();
 }

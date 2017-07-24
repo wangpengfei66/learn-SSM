@@ -28,7 +28,7 @@ import java.util.Map;
 public class CustomerServiceImpl implements CustomerService{
 
 
-    @Value("#{'${customer.trade}'.split(',')}") //SpringEL
+    @Value("#{'${customer.trade}'.split(',')}") //SpringEL表达式
     private List<String> tradeList;
     @Value("#{'${customer.source}'.split(',')}")
     private List<String> sourceList;
@@ -185,6 +185,15 @@ public class CustomerServiceImpl implements CustomerService{
         PageHelper.startPage(pageNum,5);
         List<Customer> customerList = findPublicCustomer();
         return new PageInfo<>(customerList);
+    }
+
+    /**
+     * 查询所有的客户
+     * @return
+     */
+    @Override
+    public List<Customer> findAll() {
+        return customerMapper.selectByExample(new CustomerExample());
     }
 
 
