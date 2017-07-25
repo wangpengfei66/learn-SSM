@@ -23,4 +23,6 @@ public interface SaleChanceService {
     void delSaleChanceById(Integer saleId);
 
     void addNewRecord(SaleChanceRecord saleChanceRecord);
+
+    List<SaleChance> findByAccountIdAndCustomerId(Integer id, Integer id1);
 }

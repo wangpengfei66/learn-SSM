@@ -196,5 +196,10 @@ public class CustomerServiceImpl implements CustomerService{
         return customerMapper.selectByExample(new CustomerExample());
     }
 
+    @Override
+    public Customer findOneCustomerById(Integer id) {
+        return customerMapper.selectByPrimaryKey(id);
+    }
+
 
 }

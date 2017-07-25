@@ -2,6 +2,7 @@ package com.kaishengit.crm.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.google.zxing.WriterException;
 import com.kaishengit.crm.controller.exception.ForbiddenException;
 import com.kaishengit.crm.controller.exception.NotFoundException;
 import com.kaishengit.crm.entity.Account;
@@ -9,8 +10,12 @@ import com.kaishengit.crm.entity.Customer;
 import com.kaishengit.crm.mapper.AccountMapper;
 import com.kaishengit.crm.service.AccountService;
 import com.kaishengit.crm.service.CustomerService;
+import com.kaishengit.crm.service.SaleChanceService;
+import com.kaishengit.crm.service.TaskService;
 import com.kaishengit.crm.util.StringUtils;
 import com.kaishengit.dto.AjaxResult;
+import com.kaishengit.exception.ServiceException;
+import com.kaishengit.util.QrCodeUtil;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +26,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.jws.WebParam;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +38,10 @@ public class CustomerController {
     private CustomerService customerService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private SaleChanceService saleChanceService;
+    @Autowired
+    private TaskService taskService;
     /**
      * 查询个人员工列表
      * @return后端查询到的分页结果显示到前端页面，包括分页，和条件搜索
@@ -95,10 +106,43 @@ public class CustomerController {
         if(!account.getId().equals(customer.getAccountId())) {
             throw new ForbiddenException();
         }
+        model.addAttribute("progressList",saleChanceService.getProgressList());
+        model.addAttribute("taskList",taskService.findTaskByAccountIdAndCustomerId(account.getId(),id));
+        model.addAttribute("chanceList",saleChanceService.findByAccountIdAndCustomerId(account.getId(),id));
         model.addAttribute("accountList",accountService.findAllAccounts());
         model.addAttribute("customer",customer);
         return "customer/customerInfo";
     }
+    /**
+     * 展示客户的二维码
+     */
+    @GetMapping("/my/qrcode/{id:\\d+}")
+    public void showQRCode(@PathVariable Integer id,HttpServletResponse response) {
+        Customer customer = customerService.findById(id);
+        response.setContentType("image/png");
+        //vcard 格式 https://zxing.appspot.com/generator
+        StringBuffer str = new StringBuffer();
+        str.append("BEGIN:VCARD\r\n");
+        str.append("VERSION:3.0\r\n");
+        str.append("N:").append(customer.getCustName()).append("\r\n");
+        str.append("TITLE:").append(customer.getJob()).append("\r\n");
+        str.append("TEL:").append(customer.getTel()).append("\r\n");
+        str.append("ADR:").append(customer.getAddress()).append("\r\n");
+        str.append("END:VCARD\r\n");
+
+        OutputStream outputStream = null;
+        try {
+            outputStream = response.getOutputStream();
+            QrCodeUtil.writeToStream(str.toString(),outputStream,300,300);
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException | WriterException e) {
+            throw new ServiceException("渲染二维码失败",e);
+        }
+
+    }
+
+
 
     /**
      * 修改客户

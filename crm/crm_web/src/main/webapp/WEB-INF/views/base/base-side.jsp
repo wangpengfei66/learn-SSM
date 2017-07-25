@@ -123,7 +123,7 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="/task"><i class="fa fa-circle-o"></i> 待办列表</a></li>
+                    <li><a href="/task/my"><i class="fa fa-circle-o"></i> 待办列表</a></li>
                     <li><a href=""><i class="fa fa-circle-o"></i> 逾期事项</a></li>
                 </ul>
             </li>

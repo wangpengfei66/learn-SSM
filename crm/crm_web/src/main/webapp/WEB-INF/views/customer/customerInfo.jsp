@@ -15,6 +15,8 @@
             color: #ff7400;
         }
     </style>
+    <link rel="stylesheet" href="/static/plugins/datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="/static/plugins/datepicker/datepicker3.css">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -84,20 +86,58 @@
                 <div class="col-md-8">
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">跟进记录</h3>
+                            <h3 class="box-title">销售机会</h3>
+                            <div class="box-tools pull-right">
+                                <a href="javascript:;" class="btn btn-box-tool" id="addChanceBtn">
+                                    <i class="fa fa-plus"></i> 添加机会
+                                </a>
+                            </div>
                         </div>
                         <div class="box-body">
-
+                        <c:if test="${empty chanceList}">
+                                <li class="list-group-item">暂无销售机会</li>
+                            </c:if>
+                            <ul class="list-group">
+                                <c:forEach items="${chanceList}" var="chance">
+                                    <li class="list-group-item"><a href="/sales/chance/${chance.id}" target="_blank">${chance.name}</a></li>
+                                </c:forEach>
+                            </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
+                    <%--二维码展示--%>
+                    <div class="box">
+                        <div class="box-body" style="text-align: center">
+                            <img src="/customer/my/qrcode/${customer.id}" alt="">
+                        </div>
+                    </div>
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">日程安排</h3>
+                            <h3 class="box-title">待办事项</h3>
+                            <div class="box-tools pull-right">
+                                <a href="javascript:;" class="btn btn-box-tool" id="addTaskBtn">
+                                    <i class="fa fa-plus"></i> 添加待办事项
+                                </a>
+                            </div>
                         </div>
                         <div class="box-body">
-
+                            <c:if test="${empty taskList}">
+                                <li class="list-group-item">暂无待办事项</li>
+                            </c:if>
+                            <ul class="todo-list">
+                                <c:forEach items="${taskList}" var="task">
+                                    <li class="${task.done ? 'done' : ''}">
+                                        <input type="checkbox">
+                                        <span class="text">${task.taskName}</span>
+                                        <small class="label label-danger"><i class="fa fa-clock-o"></i> ${task.completeTime}</small>
+                                        <div class="tools">
+                                            <i class="fa fa-edit"></i>
+                                            <i class="fa fa-trash-o"></i>
+                                        </div>
+                                    </li>
+                                </c:forEach>
+                            </ul>
                         </div>
                     </div>
                     <div class="box">
@@ -116,6 +156,91 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+    <%--添加机会的模态框--%>
+    <div class="modal fade" id="chanceModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">添加销售机会</h4>
+          </div>
+          <div class="modal-body">
+              <form action="/sales/chance/new/${customer.id}" method="post" id="chanceForm">
+                  <input type="hidden" name="accountId" value="${sessionScope.currentUser.id}">
+                  <input type="hidden" name="custId" value="${customer.id}">
+                  <div class="form-group">
+                      <label>机会名称</label>
+                      <input type="text" class="form-control" name="name">
+                  </div>
+                  <div class="form-group">
+                      <label>关联客户</label>
+                      <input type="text" class="form-control" value="${customer.custName}" disabled>
+                  </div>
+                  <div class="form-group">
+                      <label>机会价值</label>
+                      <input type="text" class="form-control" name="worth">
+                  </div>
+                  <div class="form-group">
+                      <label>当前进度</label>
+                      <select name="progress" class="form-control">
+                          <option value=""></option>
+                          <c:forEach items="${progressList}" var="progress">
+                              <option value="${progress}">${progress}</option>
+                          </c:forEach>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label>详细内容</label>
+                      <textarea name="content" class="form-control"></textarea>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" id="saveChanceBtn">保存</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <%--待办事项的模态框--%>
+    <div class="modal fade" id="taskModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">新增待办事项</h4>
+          </div>
+          <div class="modal-body">
+              <form action="/task/my/new/${customer.id}" id="taskForm" method="post">
+                  <input type="hidden" name="accountId" value="${sessionScope.currentUser.id}">
+                  <input type="hidden" name="customerId" value="${customer.id}">
+                  <div class="form-group">
+                      <label>任务名称</label>
+                      <input type="text" class="form-control" name="taskName">
+                  </div>
+                  <div class="form-group">
+                      <label>完成日期</label>
+                      <input type="text" class="form-control" id="datepicker" name="completeTime">
+                  </div>
+                  <div class="form-group">
+                      <label>提醒时间</label>
+                      <input type="text" class="form-control" id="datepicker2" name="reminderTime">
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" id="saveTaskBtn">保存</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+
+    <%--转移客户模态框--%>
     <div class="modal fade" id="accountModal">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -146,6 +271,12 @@
 
 <%@include file="../base/base-js.jsp"%>
 <script src="/static/plugins/layer/layer.js"></script>
+<script src="/static/plugins/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/static/plugins/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/static/plugins/moment/moment.js"></script>
+<script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="/static/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="/static/plugins/validate/jquery.validate.min.js"></script>
 <script>
     $(function () {
         var custId = ${customer.id};
@@ -174,6 +305,105 @@
            }
            window.location.href = "/customer/my/"+custId+"/transfer/"+accountId+"";
         });
+
+        //新增待办事项
+        $("#addTaskBtn").click(function () {
+            $("#taskModal").modal({
+                show:true,
+                backdrop:'static'
+            });
+        });
+        //新增待办事项
+        $("#saveTaskBtn").click(function () {
+            $("#taskForm").submit();
+        });
+        $("#taskForm").validate({
+            errorClass:"text-danger", //设置提示字体的样式
+            errorElement:"span",
+            rules:{
+                //规则
+                taskName:{
+                    required:true
+                },
+                completeTime:{
+                    required:true
+                }
+            },
+            messages:{
+                //提示信息内容
+                taskName:{
+                    required:"请输入待办事项名称"
+                },
+                completeTime:{
+                    required:"请输入要完成的时间"
+                }
+            }
+        });
+
+        var picker = $('#datepicker').datepicker({
+            format: "yyyy-mm-dd",
+            language: "zh-CN",
+            autoclose: true,
+            todayHighlight: true,
+            startDate:moment().format("yyyy-MM-dd")
+        });
+        picker.on("changeDate",function (e) {
+            var today = moment().format("YYYY-MM-DD");
+            $('#datepicker2').datetimepicker('setStartDate',today);
+            $('#datepicker2').datetimepicker('setEndDate', e.format('yyyy-mm-dd'));
+        });
+
+        var timepicker = $('#datepicker2').datetimepicker({
+            format: "yyyy-mm-dd hh:ii",
+            language: "zh-CN",
+            autoclose: true,
+            todayHighlight: true
+        });
+        //添加销售机会
+        $("#addChanceBtn").click(function () {
+            $("#chanceModal").modal({
+                show:true,
+                backdrop:'static'
+            });
+            $("#saveChanceBtn").click(function () {
+                $("#chanceForm").submit()
+            });
+            $("#chanceForm").validate({
+                errorClass:"text-danger", //设置提示字体的样式
+                errorElement:"span",
+                rules:{
+                    //规则
+                    name:{
+                        required:true
+                    },
+                    custId:{
+                        required:true
+                    },
+                    worth:{
+                        required:true
+                    },
+                    progress:{
+                        required:true
+                    }
+                },
+                messages:{
+                    //提示信息内容
+                    name:{
+                        required:"请输入机会名称"
+                    },
+                    custId:{
+                        required:"请输入关联的客户"
+                    },
+                    worth:{
+                        required:"请输入价值"
+                    },
+                    progress:{
+                        required:"请输入进度"
+                    }
+                }
+            });
+        });
+        
     })
 </script>
 

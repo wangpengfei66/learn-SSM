@@ -43,6 +43,7 @@
                                 <c:forEach items="${customerList}" var="customer">
                                     <option value="${customer.id}">${customer.custName}</option>
                                 </c:forEach>
+                                <option value="${currentCustomer.id}" disabled>${currentCustomer.custName}</option>
                             </select>
                         </div>
                         <div class="form-group">

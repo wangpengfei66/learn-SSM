@@ -2,10 +2,7 @@ package com.kaishengit.crm.serviceImpl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.kaishengit.crm.entity.Customer;
-import com.kaishengit.crm.entity.SaleChance;
-import com.kaishengit.crm.entity.SaleChanceRecord;
-import com.kaishengit.crm.entity.SaleChanceRecordExample;
+import com.kaishengit.crm.entity.*;
 import com.kaishengit.crm.mapper.CustomerMapper;
 import com.kaishengit.crm.mapper.SaleChanceMapper;
 import com.kaishengit.crm.mapper.SaleChanceRecordMapper;
@@ -116,7 +113,7 @@ public class SaleChanceServiceImpl implements SaleChanceService {
      * @param saleChanceRecord
      */
     @Override
-    @Transactional
+    @Transactional//用到了事务的传播属性，一个事务加入到了另一个事务中
     public void addNewRecord(SaleChanceRecord saleChanceRecord) {
         //添加跟进记录
         saleChanceRecord.setCreateTime(new Date());
@@ -129,6 +126,19 @@ public class SaleChanceServiceImpl implements SaleChanceService {
         Customer customer = customerMapper.selectByPrimaryKey(saleChance.getCustId());
         customer.setContactTime(new Date());
         customerMapper.updateByPrimaryKeySelective(customer);
+    }
+
+    /**
+     * 查询销售机会列表
+     * @param
+     * @param
+     * @return
+     */
+    @Override
+    public List<SaleChance> findByAccountIdAndCustomerId(Integer accountId, Integer custId) {
+        SaleChanceExample saleChanceExample = new SaleChanceExample();
+        saleChanceExample.createCriteria().andAccountIdEqualTo(accountId).andCustIdEqualTo(custId);
+        return saleChanceMapper.selectByExample(saleChanceExample);
     }
 
 
