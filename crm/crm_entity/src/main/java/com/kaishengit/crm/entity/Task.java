@@ -51,6 +51,30 @@ public class Task implements Serializable {
      * 创建时间
      */
     private Date createTime;
+    /**
+     * customer
+     */
+    private Customer customer;
+    /**
+     * saleChance
+     */
+    private SaleChance saleChance;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public SaleChance getSaleChance() {
+        return saleChance;
+    }
+
+    public void setSaleChance(SaleChance saleChance) {
+        this.saleChance = saleChance;
+    }
 
     private static final long serialVersionUID = 1L;
 

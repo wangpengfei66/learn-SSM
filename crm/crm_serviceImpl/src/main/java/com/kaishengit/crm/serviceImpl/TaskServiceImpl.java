@@ -63,4 +63,35 @@ public class TaskServiceImpl implements TaskService {
         taskExample.createCriteria().andAccountIdEqualTo(accountId).andSaleIdEqualTo(saleId);
         return taskMapper.selectByExample(taskExample);
     }
+
+    /**
+     * 根据accountid查找自己的task列表
+     * @param id
+     * @param showAll
+     * @return
+     */
+    @Override
+    public List<Task> findTaskByAccountId(Integer accountId, boolean showAll) {
+        return taskMapper.findTaskByAccountId(accountId,showAll);
+    }
+
+    @Override
+    public Task findById(Integer id) {
+        return taskMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void delById(Integer id) {
+        taskMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 更新状态
+     * @param task
+     */
+    @Override
+    public void updateById(Task task) {
+        taskMapper.updateByPrimaryKeySelective(task);
+    }
+
 }
