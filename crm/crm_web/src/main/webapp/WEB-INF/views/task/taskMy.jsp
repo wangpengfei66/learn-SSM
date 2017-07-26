@@ -12,7 +12,7 @@
 <!-- Site wrapper -->
 <div class="wrapper">
     <jsp:include page="../base/base-side.jsp">
-        <jsp:param name="active" value="home"/>
+        <jsp:param name="active" value="taskMy"/>
     </jsp:include>
     <!-- 右侧内容部分 -->
     <div class="content-wrapper">

@@ -115,7 +115,7 @@
                 </ul>
             </li>
             <!-- 待办事项 -->
-            <li class="treeview">
+            <li class="treeview" ${fn:startsWith(param.active, "task") ? 'active' : ''}">
                 <a href="#">
                     <i class="fa fa-calendar"></i> <span>待办事项</span>
                     <span class="pull-right-container">
@@ -123,7 +123,7 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="/task/my"><i class="fa fa-circle-o"></i> 待办列表</a></li>
+                    <li class="${param.active == 'taskMy' ? 'active' : ''}"><a href="/task/my"><i class="fa fa-circle-o"></i> 待办列表</a></li>
                     <li><a href=""><i class="fa fa-circle-o"></i> 逾期事项</a></li>
                 </ul>
             </li>
@@ -142,7 +142,7 @@
             </li>
 
 
-            <li><a href="../../documentation/index.html"><i class="fa fa-share-alt"></i> <span>公司网盘</span></a></li>
+            <li class="${param.active == 'diskHome' ? 'active' : ''}"><a href="/disk"><i class="fa fa-share-alt"></i> <span>公司网盘</span></a></li>
             <li class="header">系统管理</li>
             <!-- 部门员工管理 -->
             <li class="${param.active == 'manageAccount' ? 'active':''}"><a href="/manage/account"><i class="fa fa-users"></i> <span>员工管理</span></a></li>
