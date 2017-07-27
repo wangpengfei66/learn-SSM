@@ -28,7 +28,6 @@ public class QuartzTest {
         Scheduler scheduler = new StdSchedulerFactory().getScheduler();
         scheduler.scheduleJob(jobDetail,trigger);
         scheduler.start();
-        System.in.read();
     }
     @Test
     public void cornTrigger() throws SchedulerException, IOException {
@@ -46,7 +45,6 @@ public class QuartzTest {
         Scheduler scheduler = new StdSchedulerFactory().getScheduler();
         scheduler.scheduleJob(jobDetail,cronTrigger);
         scheduler.start();
-        System.in.read();
     }
 
 

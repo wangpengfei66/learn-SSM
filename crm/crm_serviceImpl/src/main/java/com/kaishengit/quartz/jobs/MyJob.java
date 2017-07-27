@@ -9,7 +9,7 @@ public class MyJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         JobDataMap dataMap = jobExecutionContext.getMergedJobDataMap();
-        String to = (String) dataMap.get("to");
+        Integer to = (Integer) dataMap.get("to");
         String message = (String) dataMap.get("message");
         System.out.println("发送微信通知~~~~" + to + message);
     }

@@ -43,7 +43,8 @@ public class TaskController extends BaseController{
     @PostMapping("/my/new")
     public String addNewTask(Task task, RedirectAttributes redirectAttributes, HttpSession session) {
         Account account = (Account) session.getAttribute("currentUser");
-        taskService.saveNewTask(task,account.getId());
+        task.setAccountId(account.getId());
+        taskService.saveNewTask(task);
         redirectAttributes.addFlashAttribute("message","新增成功");
         return "redirect:/task/my";
     }

@@ -117,27 +117,33 @@ public class DiskServiceImpl implements DiskService {
     @Override
     @Transactional
     public void delById(Disk disk) {
-        //即将被删的list
-        int pId = disk.getId();
-        DiskExample example = new DiskExample();
-        example.createCriteria().andPIdEqualTo(pId);
-        //找到了父task的下一层
-        List<Disk> diskList = diskMapper.selectByExample(example);
-        if(diskList != null) {
-            for(Disk disk1 : diskList) {
-                delById(disk1);
-                // TODO 不能删除自己
-                del(diskList);
-            }
-        }else {
+        if(disk.getType().equals("file")) {
+            diskMapper.deleteByPrimaryKey(disk.getId());
             return;
+        }else {
+            //即将被删的list
+            int pId = disk.getId();
+            DiskExample example = new DiskExample();
+            example.createCriteria().andPIdEqualTo(pId);
+            //找到了父task的下一层
+            List<Disk> diskList = diskMapper.selectByExample(example);
+            if(diskList != null) {
+                for(Disk disk1 : diskList) {
+                    delById(disk1);
+                    // TODO 不能删除自己
+                    del(diskList,pId);
+                }
+            }else {
+                return;
+            }
         }
     }
 
-    private void del(List<Disk> diskList) {
+    private void del(List<Disk> diskList,Integer id) {
         for(Disk disk : diskList) {
             diskMapper.deleteByPrimaryKey(disk.getId());
         }
+        diskMapper.deleteByPrimaryKey(id);
     }
 
 }
