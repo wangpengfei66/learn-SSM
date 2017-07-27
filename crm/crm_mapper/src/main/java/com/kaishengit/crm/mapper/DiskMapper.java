@@ -27,4 +27,5 @@ public interface DiskMapper {
     int updateByPrimaryKeySelective(Disk record);
 
     int updateByPrimaryKey(Disk record);
+
 }

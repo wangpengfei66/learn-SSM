@@ -54,15 +54,30 @@
                         <c:if test="${not empty disk}">
                             <a href="/disk?_=${disk.pId}" class="btn btn-default btn-sm"><i class="fa fa-arrow-left"></i> 返回上级</a>
                         </c:if>
-                        <div id="picker"><i class="fa fa-upload"></i> 上传文件</div>
-                        <button id="showNewFolderModal" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> 新建文件夹</button>
+                        <c:choose>
+                            <c:when test="${disk.type == 'file'}">
+                                <a href="/disk/download?_=${disk.id}" class="btn btn-sm btn-danger"><i class="fa fa-download"></i>下载</a>
+                            </c:when>
+                            <c:otherwise>
+                                <div id="picker"><i class="fa fa-upload"></i> 上传文件</div>
+                                <button id="showNewFolderModal" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> 新建文件夹</button>
+                            </c:otherwise>
+                        </c:choose>
+
                     </div>
                 </div>
                 <div class="box-body no-padding">
 
                     <table class="table table-hover">
                         <tbody id="dataTable">
-                            <c:if test="${empty diskList}">
+                            <c:if test="${disk.type == 'file'}">
+                                <tr>
+                                    <td colspan="4">
+                                        <a href="/disk/download?_=${disk.id}" class="btn btn-danger btn-sm"><i class="fa fa-download"></i> 下载</a>
+                                    </td>
+                                </tr>
+                            </c:if>
+                            <c:if test="${empty diskList and disk.type == 'dir'}">
                                 <tr>
                                     <td colspan="4">暂无内容</td>
                                 </tr>
@@ -87,14 +102,22 @@
                                         </c:if>
                                     </td>
                                     <td width="150">
-                                        <div class="btn-group">
+                                        <div class="btn-group" >
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                                 <i class="fa fa-ellipsis-h"></i>
                                             </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="">打开</a></li>
-                                                <li><a href="#">重命名</a></li>
-                                                <li><a href="#">删除</a></li>
+                                            <ul class="dropdown-menu" >
+                                               <%-- <c:choose>
+                                                    <c:when test="${disk.type == 'dir'} ">
+                                                        <li><a href="javascript:;">打开</a></li>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <li><a href="javascript:;">下载</a></li>
+                                                    </c:otherwise>
+                                                </c:choose>--%>
+                                                <li><a href="javascript:;">打开</a></li>
+                                                <li><a href="javascript:;" class="reNameBtn" rel="${disk.id}">重命名</a></li>
+                                                <li><a href="javascript:;" class="delBtn" rel="${disk.id}">删除</a></li>
                                             </ul>
                                         </div>
                                     </td>
@@ -145,8 +168,8 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li><a href="">下载</a></li>
-                    <li><a href="#">重命名</a></li>
-                    <li><a href="#">删除</a></li>
+                    <li><a href="javascript:;" class="reNameBtn" rel="{{id}}">重命名</a></li>
+                    <li><a href="javascript:;" class="delBtn" rel="{{id}}">删除</a></li>
                 </ul>
             </div>
         </td>
@@ -154,6 +177,52 @@
 </script>
 <script>
     $(function () {
+        $(document).delegate(".delBtn","click",function(event) {
+            event.stopPropagation();//
+            var taskId = $(this).attr("rel");
+            layer.confirm("确定要删除改?",function () {
+                $.get("/disk/del/" + taskId).done(function(data) {
+                    if(data.state == 'success') {
+                        layer.msg("删除成功",function () {
+                            window.history.go(0);
+                        });
+                    }else {
+                        layer.msg(data.message);
+                    }
+                }).error(function() {
+                    layer.msg("服务器异常");
+                });
+            })
+        });
+
+
+
+        $(document).delegate(".reNameBtn","click",function(event) {
+            event.stopPropagation();//
+            var taskId = $(this).attr("rel");
+            layer.prompt({title:"请输入修改后的名字"},function (text,index) {
+                layer.close(index);
+                $.post("/disk/reName",{"pId":pid,"name":text,"accountId":accountId,"id":taskId}).done(function(resp) {
+                    if(resp.state == 'success') {
+                        layer.msg("修改成功");
+                        $("#dataTable").html("");//清空
+                        //动态加载
+                        for(var i = 0;i < resp.object.length;i++) {
+                            var obj = resp.object[i]; //{id:1,name:'',fileSize:}
+                            obj.updateTime = moment(obj.updateTime).format("MM月DD日"); //将时间戳格式化
+                            var html = template("trTemplate", obj); //将JSON对象传递给模板对象，转换为HTML
+                            $("#dataTable").append(html);
+                        }
+                    }else{
+                        layer.msg(resp.message);
+                    }
+                }).error(function() {
+                    layer.msg("服务器异常");
+                });
+            });
+        });
+
+
         var pid = ${not empty requestScope.disk ? requestScope.disk.id : '0'};
         var accountId = ${sessionScope.currentUser.id};
         //添加新文件夹
