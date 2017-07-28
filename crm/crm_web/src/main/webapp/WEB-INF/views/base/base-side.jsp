@@ -128,7 +128,7 @@
                 </ul>
             </li>
             <!-- 统计报表 -->
-            <li class="treeview">
+            <li class="treeview" class="treeview" class="treeview ${fn:startsWith(param.active, "charts") ? 'active' : ''}">
                 <a href="#">
                     <i class="fa fa-pie-chart"></i> <span>统计报表</span>
                     <span class="pull-right-container">
@@ -136,8 +136,8 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="../../index.html"><i class="fa fa-circle-o"></i> 待办列表</a></li>
-                    <li><a href="../../index2.html"><i class="fa fa-circle-o"></i> 逾期事项</a></li>
+                    <li class="${param.active == 'chartsStatic' ? 'active':''}"><a href="/charts/static"><i class="fa fa-circle-o"></i> 静态数据演示</a></li>
+                    <li class="${param.active == 'chartsCustomer' ? 'active':''}"><a href="/charts/customer"><i class="fa fa-circle-o"></i>客户星级分布图</a></li>
                 </ul>
             </li>
 

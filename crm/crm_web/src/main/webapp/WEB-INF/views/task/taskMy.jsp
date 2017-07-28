@@ -114,6 +114,7 @@
 <script src="/static/plugins/layer/layer.js"></script>
 <script>
     $(function () {
+        //删除待办事项
         $(".del_task").click(function () {
             var id = $(this).attr("rel");
             layer.confirm("确定要删除该待办事项",function () {
@@ -130,6 +131,7 @@
                 window.location.href = "/task/my/" + id + "/state/undone";
             }
         });
+        //编辑待办事项
         $(".edit_task").click(function() {
             var id = $(this).attr("rel");
             window.location.href = "/task/my/edit/" + id;

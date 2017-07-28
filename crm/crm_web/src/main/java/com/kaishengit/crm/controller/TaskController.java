@@ -116,10 +116,18 @@ public class TaskController extends BaseController{
         return "redirect:/task/my";
     }
     /**
+     * 编辑待办事项
+     */
+    @PostMapping("/my/edit")
+    public String editTaskById(Task task) {
+        taskService.updateById(task);
+        return "redirect:/task/my";
+    }
+    /**
      * 编辑task向前端传值
      */
     @GetMapping("/my/edit/{id:\\d+}")
-    public void editTaskLoadTask(@PathVariable Integer id,HttpSession session,Model model) {
+    public String editTaskLoadTask(@PathVariable Integer id,HttpSession session,Model model) {
         Task task = taskService.findById(id);
         Account account = (Account) session.getAttribute("currentUser");
         if(task == null) {
@@ -129,6 +137,7 @@ public class TaskController extends BaseController{
             throw new ForbiddenException();
         }
         model.addAttribute("currentTask",task);
+        return "task/taskEdit";
     }
 
 }

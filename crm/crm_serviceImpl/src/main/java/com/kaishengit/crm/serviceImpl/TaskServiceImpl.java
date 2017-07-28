@@ -63,7 +63,9 @@ public class TaskServiceImpl implements TaskService {
             //获取调度器
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
             //jobDetail
-            JobDetail jobDetail = JobBuilder.newJob(MyJob.class).withIdentity(new JobKey("account:" + task.getAccountId()+task.getId(),"weixingroup")).setJobData(jobDataMap).build();
+            JobDetail jobDetail = JobBuilder.newJob(MyJob.class)
+                    .withIdentity(new JobKey("account:"+task.getAccountId()+":"+task.getId(),"weixinGroup"))
+                    .setJobData(jobDataMap).build();
             //字符串日期格式转换为JodaTime的DateTime类对象
             DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
             DateTime dateTime = formatter.parseDateTime(task.getReminderTime());
@@ -150,7 +152,7 @@ public class TaskServiceImpl implements TaskService {
         if(StringUtils.isNotEmpty(task.getReminderTime())) {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
             try {
-                scheduler.deleteJob(new JobKey("account:" +task.getAccountId() + task.getId(),"weixingroup"));
+                scheduler.deleteJob(new JobKey("account:"+task.getAccountId() + ":" +task.getId(),"weixinGroup"));
             } catch (SchedulerException e) {
                 throw new ServiceException("删除调度任务异常",e);
             }

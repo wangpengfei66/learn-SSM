@@ -179,8 +179,8 @@
                                         <span class="text">${task.taskName}</span>
                                         <small class="label label-danger"><i class="fa fa-clock-o"></i> ${task.completeTime}</small>
                                         <div class="tools">
-                                            <i class="fa fa-edit"></i>
-                                            <i class="fa fa-trash-o"></i>
+                                            <i class="fa fa-edit task-edit" rel="${task.id}"></i>
+                                            <i class="fa fa-trash-o task-del" rel="${task.id}"></i>
                                         </div>
                                     </li>
                                 </c:forEach>
@@ -354,7 +354,22 @@
             autoclose: true,
             todayHighlight: true
         });
-
+        //删除待办事项
+        $(".task-del").click(function () {
+            var id = $(this).attr("rel");
+            layer.confirm("确定要删除该待办事项",function () {
+                window.location.href = "/task/my/del/" + id;
+            })
+        });
+        //编辑待办事项
+        $(".task-edit").click(function() {
+            var id = $(this).attr("rel");
+            window.location.href = "/task/my/edit/" + id;
+            $("#taskModal").modal({
+                show:true,
+                backdrop:'static'
+            });
+        });
 
         var saleId = ${saleChance.id};
         //删除

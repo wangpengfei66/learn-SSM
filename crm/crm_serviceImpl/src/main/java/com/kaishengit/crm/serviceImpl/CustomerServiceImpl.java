@@ -201,5 +201,10 @@ public class CustomerServiceImpl implements CustomerService{
         return customerMapper.selectByPrimaryKey(id);
     }
 
+    @Override
+    public List<Map<String, Object>> countCustomerByLevel() {
+        return customerMapper.findCountByLevel();
+    }
+
 
 }

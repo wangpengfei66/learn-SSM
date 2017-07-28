@@ -38,4 +38,6 @@ public interface CustomerService {
     List<Customer> findAll();
 
     Customer findOneCustomerById(Integer id);
+
+    List<Map<String,Object>> countCustomerByLevel();
 }
