@@ -8,6 +8,7 @@ import com.kaishengit.crm.mapper.AccountMapper;
 import com.kaishengit.crm.mapper.DeptMapper;
 import com.kaishengit.crm.service.DeptService;
 import com.kaishengit.exception.ServiceException;
+import com.kaishengit.weixin.WeiXinUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +28,22 @@ public class DeptServiceImpl implements DeptService {
     private AccountMapper accountMapper;
     @Autowired
     private AccountDeptMapper accountDeptMapper;
+    @Autowired
+    private WeiXinUtil weiXinUtil;
 
     @Override
     public List<Dept> findAllDept() {
         return deptMapper.selectByExample(new DeptExample());
     }
 
+    /**
+     * 新建公司，加入，新建微信公司
+     * @param dept
+     */
     @Override
+    @Transactional
     public void save(Dept dept) {
+        weiXinUtil.createDept(dept.getId(),dept.getpId(),dept.getDeptName());
         deptMapper.insert(dept);
     }
 
@@ -54,5 +63,6 @@ public class DeptServiceImpl implements DeptService {
         else{
             deptMapper.deleteByPrimaryKey(id);
         }
+        weiXinUtil.deleteDeptById(id.toString());
     }
 }

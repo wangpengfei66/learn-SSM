@@ -175,7 +175,7 @@
                             <ul class="todo-list">
                                 <c:forEach items="${taskList}" var="task">
                                     <li class="${task.done ? 'done' : ''}">
-                                        <input type="checkbox">
+                                        <input type="checkbox" class="task_checkbox" ${task.done ? 'checked' : ''} value="${task.id}">
                                         <span class="text">${task.taskName}</span>
                                         <small class="label label-danger"><i class="fa fa-clock-o"></i> ${task.completeTime}</small>
                                         <div class="tools">
@@ -232,7 +232,6 @@
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
-
             <%--添加跟进记录模态框--%>
             <div class="modal fade" id="recordModal">
               <div class="modal-dialog" role="document">
@@ -301,6 +300,16 @@
 <script src="/static/plugins/validate/jquery.validate.min.js"></script>
 <script>
     $(function () {
+        //修改待办事项状态
+        $(".task_checkbox").click(function () {
+            var id = $(this).val();
+            var checked = $(this)[0].checked;
+            if(checked) {
+                window.location.href = "/task/my/" + id + "/state/done";
+            }else{
+                window.location.href = "/task/my/" + id + "/state/undone";
+            }
+        });
         //新增待办事项
         $("#addTaskBtn").click(function () {
             $("#taskModal").modal({

@@ -9,6 +9,7 @@ import com.kaishengit.crm.mapper.AccountMapper;
 import com.kaishengit.crm.service.AccountService;
 import com.kaishengit.exception.LoginException;
 import com.kaishengit.exception.ServiceException;
+import com.kaishengit.weixin.WeiXinUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,8 @@ public class AccountServiceImpl implements AccountService {
     private AccountMapper accountMapper;
     @Autowired
     private AccountDeptMapper accountDeptMapper;
+    @Autowired
+    private WeiXinUtil weiXinUtil;
     @Value("password.salt")
      private String passwordSalt;
     @Override
@@ -43,6 +46,7 @@ public class AccountServiceImpl implements AccountService {
 
             accountDeptMapper.insert(accountDeptKey);
         }
+        weiXinUtil.createAccount(account.getId(),account.getUserName(),account.getMobile(),depts);
     }
 
     @Override
@@ -97,6 +101,8 @@ public class AccountServiceImpl implements AccountService {
         AccountExample accountExample = new AccountExample();
         accountExample.createCriteria().andIdEqualTo(id);
         accountMapper.deleteByExample(accountExample);
+        //微信中删除
+        weiXinUtil.deleteAccount(id.toString());
     }
 
     @Override

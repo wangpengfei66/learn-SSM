@@ -26,12 +26,10 @@
             <!-- Default box -->
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">新增待办任务</h3>
+                    <h3 class="box-title">修改待办任务</h3>
 
                     <div class="box-tools pull-right">
-                        <a href="/task/my" type="button" class="btn btn-primary">
-                            <i class="fa fa-list"></i> 返回列表
-                        </a>
+
                     </div>
                 </div>
                 <div class="box-body">
@@ -105,7 +103,7 @@
                 }
             }
         });
-
+        //日期的js
         var picker = $('#datepicker').datepicker({
             format: "yyyy-mm-dd",
             language: "zh-CN",
