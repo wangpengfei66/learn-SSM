@@ -9,10 +9,24 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import org.junit.After;
+import org.junit.Before;
 
 import java.util.List;
 
 public class Test {
+    private Session session;
+
+    /*@Before
+    public void before() {
+        session = HibernateUtil.getSession();
+        session.beginTransaction();
+    }*/
+    /*@After
+    public void after() {
+        session.getTransaction().commit();
+    }*/
+
 
     @org.junit.Test
     public void first() {
@@ -30,16 +44,41 @@ public class Test {
         account.setAddress("西安");
         account.setAge(78);
         session.save(account);
+
         //提交事务
         transaction.commit();
     }
     @org.junit.Test
-    public void query() {
+    public void persist() {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        Account account = (Account) session.get(Account.class,1);
-        System.out.println(account.getUsername());
+
+        Account account = new Account();
+        account.setUsername("王大虎");
+        account.setAddress("西安");
+        account.setAge(78);
+        session.saveOrUpdate(account);
         session.getTransaction().commit();
+
+        Session session1 = HibernateUtil.getSession();
+        session1.beginTransaction();
+        account.setUsername("刘能");
+        session1.merge(account);
+        session1.getTransaction().commit();
+    }
+
+    @org.junit.Test
+    public void query() {
+
+        Account account = (Account) session.get(Account.class,4);
+        session.getTransaction().commit();
+        System.out.println(account.getUsername());
+    }
+    @org.junit.Test
+    public void load() {
+        Account account = (Account) session.load(Account.class,4);
+        session.getTransaction().commit();
+        System.out.println(account.getUsername());
     }
     @org.junit.Test
     public void update() {
@@ -70,7 +109,6 @@ public class Test {
         }
         session.getTransaction().commit();
     }
-
 
 
 
