@@ -3,6 +3,7 @@ package com.kaishengit.hibernate;
 import com.kaishengit.pojo.Address;
 import com.kaishengit.pojo.User;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 import org.junit.Test;
 
@@ -55,7 +56,9 @@ public class OneToManyTest extends BaseTest {
         //通过user_id外键查询某个用户拥有的地址 !!!!!!
         Address address = (Address) session.get(Address.class,1);
         System.out.println(address.getAddress() + "-->" + address.getCityName());
+        address.getUser().getAddressSet();
         //延迟加载，如果需要一，则再次发出请求进行查询
+        //Hibernate.initialize(address.getUser());
         //System.out.println(address.getUser().getId());
     }
     @Test
