@@ -6,11 +6,16 @@ import java.util.Set;
 @Entity
 @Table(name = "user", schema = "hibernate", catalog = "")
 public class User {
-    private int id;
-    private String userName;
-    private Set<Address> addressSet;
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @Basic
+    @Column(name = "user_name")
+    private String userName;
+    @OneToMany(mappedBy = "user")
+    private Set<Address> addressSet;
+
     public int getId() {
         return id;
     }
@@ -19,8 +24,7 @@ public class User {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "user_name")
+
     public String getUserName() {
         return userName;
     }

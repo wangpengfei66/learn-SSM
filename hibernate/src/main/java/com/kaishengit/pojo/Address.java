@@ -5,13 +5,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "address", schema = "hibernate", catalog = "")
 public class Address {
-    private int id;
-    private String cityName;
-    private String address;
-    private User user;
-
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @Basic
+    @Column(name = "city_name")
+    private String cityName;
+    private String address;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
     public int getId() {
         return id;
     }
@@ -20,8 +26,7 @@ public class Address {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "city_name")
+
     public String getCityName() {
         return cityName;
     }

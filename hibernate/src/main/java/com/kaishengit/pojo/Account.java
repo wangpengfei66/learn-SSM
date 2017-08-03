@@ -1,7 +1,12 @@
 package com.kaishengit.pojo;
 
-public class Account {
+import javax.persistence.*;
 
+@Entity
+@Table(name = "account")
+public class Account {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String username;
     private String address;

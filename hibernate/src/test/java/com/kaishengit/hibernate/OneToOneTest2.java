@@ -25,8 +25,8 @@ public class OneToOneTest2 extends BaseTest {
         Post post = (Post) session.get(Post.class,5);
         System.out.println(post.getTitle());
         //延迟加载
-        Content content = post.getContent();
-        System.out.println(content.getContent());
+        //Content content = post.getContent();
+        //System.out.println(content.getContent());
     }
 
 }

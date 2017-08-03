@@ -16,8 +16,8 @@ public class OneToManyTest extends BaseTest {
     public void save() {
         User user = (User) session.get(User.class,2);
         Address address = new Address();
-        address.setAddress("王城巩义");
-        address.setCityName("洛阳");
+        address.setAddress("布达拉风");
+        address.setCityName("拉萨");
         /*User user = new User();
         user.setUserName("王晓明");*/
         address.setUser(user);

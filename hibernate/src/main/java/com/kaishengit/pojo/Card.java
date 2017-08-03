@@ -1,18 +1,26 @@
 package com.kaishengit.pojo;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 @Entity
+@Table(name = "card")
 public class Card {
-    private int id;
-    private Integer cardNum;
-    private Person person;
 
     @Id
     @Column(name = "id")
+    @GenericGenerator(name = "FK",strategy = "foreign",
+            parameters = @org.hibernate.annotations.Parameter(name = "property",value = "person"))
+    @GeneratedValue(generator = "FK")
+    private int id;
+    @Basic
+    @Column(name = "card_num")
+    private Integer cardNum;
+    @OneToOne(mappedBy = "card")
+    @PrimaryKeyJoinColumn
+    private Person person;
+
     public int getId() {
         return id;
     }
@@ -21,8 +29,7 @@ public class Card {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "card_num")
+
     public Integer getCardNum() {
         return cardNum;
     }

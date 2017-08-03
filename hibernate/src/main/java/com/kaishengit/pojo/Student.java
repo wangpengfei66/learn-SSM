@@ -1,19 +1,22 @@
 package com.kaishengit.pojo;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(name = "student")
 public class Student {
-    private int id;
-    private String studentName;
-    private Set<Teacher> teacherSet;
-
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @Basic
+    @Column(name = "student_name")
+    private String studentName;
+
+    @ManyToMany(mappedBy = "studentSet")
+    private Set<Teacher> teacherSet;
+
     public int getId() {
         return id;
     }
@@ -22,8 +25,7 @@ public class Student {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "student_name")
+
     public String getStudentName() {
         return studentName;
     }

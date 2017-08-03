@@ -1,17 +1,20 @@
 package com.kaishengit.pojo;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "person")
 public class Person {
-    private int id;
-    private String personName;
-    private Card card;
     @Id
     @Column(name = "id")
+    private int id;
+    @Basic
+    @Column(name = "person_name")
+    private String personName;
+    @OneToOne
+    @PrimaryKeyJoinColumn
+    private Card card;
+
     public int getId() {
         return id;
     }
@@ -20,8 +23,7 @@ public class Person {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "person_name")
+
     public String getPersonName() {
         return personName;
     }

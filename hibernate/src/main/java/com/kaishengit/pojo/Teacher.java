@@ -1,19 +1,22 @@
 package com.kaishengit.pojo;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(name = "teacher")
 public class Teacher {
-    private int id;
-    private String teacher;
-    private Set<Student> studentSet;
-
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    private String teacher;
+    @ManyToMany
+    @JoinTable(name = "teacher_student",joinColumns = @JoinColumn(name = "teacher_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id"))
+    private Set<Student> studentSet;
+
+
     public int getId() {
         return id;
     }

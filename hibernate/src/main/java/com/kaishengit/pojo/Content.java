@@ -1,18 +1,20 @@
 package com.kaishengit.pojo;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "content")
 public class Content {
-    private int id;
-    private String content;
-
-    private Post post;
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    private String content;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
     public int getId() {
         return id;
     }
