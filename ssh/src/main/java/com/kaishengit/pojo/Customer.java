@@ -55,6 +55,9 @@ public class Customer implements Serializable {
     /**
      * 客户所属账户，如果为空，则为公海客户
      */
+    @ManyToOne//(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
     //private Integer accountId;
 
     private String reminder;
@@ -199,5 +202,13 @@ public class Customer implements Serializable {
 
     public void setMark(String mark) {
         this.mark = mark;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

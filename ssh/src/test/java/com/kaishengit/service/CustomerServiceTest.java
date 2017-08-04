@@ -1,6 +1,8 @@
 package com.kaishengit.service;
 
 import com.kaishengit.pojo.Customer;
+import com.kaishengit.util.orm.Condition;
+import com.kaishengit.util.orm.Page;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +62,59 @@ public class CustomerServiceTest {
         for(Customer customer : customers) {
             System.out.println(customer.getCustName());
             System.out.println(customer.getAddress());
+        }
+    }
+
+    @Test
+    public void findByCondition() {
+        Condition condition = new Condition("level","★★★","eq");
+        List<Customer> customerList = customerService.findByCondition(condition);
+        for(Customer customer : customerList) {
+            System.out.println(customer.getCustName());
+            System.out.println(customer.getAddress());
+        }
+    }
+
+    @Test
+    public void findByConditions() {
+        Condition condition = new Condition("level","★★★","eq");
+        Condition condition1 = new Condition("source","自动上门","eq");
+        List<Customer> customerList = customerService.findByConditions(condition,condition1);
+        for(Customer customer : customerList) {
+            System.out.println(customer.getCustName());
+            System.out.println(customer.getAddress());
+        }
+    }
+    @Test
+    public void findByPageNum() {
+        Page<Customer> page = customerService.findByPageNum(1);
+        System.out.println(page.getTotalNum());
+        System.out.println(page.getTotalPageSize());
+        List<Customer> customerList = page.getItems();
+        for(Customer customer : customerList) {
+            System.out.println(customer.getCustName() + " --> " + customer.getAddress());
+        }
+    }
+    @Test
+    public void findByPageNumAndCondition() {
+        Condition condition = new Condition("level","★★★","eq");
+        Page<Customer> page = customerService.findByPageNumAndCondition(1,condition);
+        System.out.println(page.getTotalNum());
+        System.out.println(page.getTotalPageSize());
+        List<Customer> customerList = page.getItems();
+        for(Customer customer : customerList) {
+            System.out.println(customer.getCustName() + " --> " + customer.getAddress());
+        }
+    }
+    @Test
+    public void findByPageNumAndConditionWithSort() {
+        Condition condition = new Condition("level","★★★","eq");
+        Page<Customer> page = customerService.findByPageNumAndConditionWithSort(1,"id",condition);
+        System.out.println(page.getTotalNum());
+        System.out.println(page.getTotalPageSize());
+        List<Customer> customerList = page.getItems();
+        for(Customer customer : customerList) {
+            System.out.println(customer.getId() + "-->" + customer.getCustName() + " --> " + customer.getAddress());
         }
     }
 
