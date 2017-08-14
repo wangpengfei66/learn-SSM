@@ -10,7 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-springdate.xml")
+@ContextConfiguration("classpath:applicationContext-springdate-cluster.xml")
 public class SpringDateTest {
 
     private RedisTemplate<String,User> redisTemplate;
